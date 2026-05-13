@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사건 #001 — 김민지를 찾아라</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1815;
+    --bg-paper: #f4ecd8;
+    --bg-card: #fdf6e3;
+    --bg-dark: #0f0e0c;
+    --ink: #1a1815;
+    --ink-dim: #6b6358;
+    --ink-faint: #a59c8e;
+    --accent: #b8332b;
+    --accent-dark: #8b1f1a;
+    --warn: #c4881e;
+    --success: #4a7c4a;
+    --line: #d6cdb5;
+    --line-dark: #b8ad95;
+    --stamp: #b8332b;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html, body {
+    background: var(--bg);
+    color: var(--bg-paper);
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    min-height: 100vh;
+  }
+  
+  /* Paper texture background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(184, 51, 43, 0.04), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(196, 136, 30, 0.03), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  
+  /* Header - police file style */
+  header {
+    border-bottom: 2px solid var(--bg-paper);
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  
+  .case-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .case-mark::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+  
+  .case-mark .stamp {
+    border: 2px solid var(--accent);
+    padding: 3px 10px;
+    font-weight: 700;
+    transform: rotate(-3deg);
+    background: rgba(184, 51, 43, 0.1);
+  }
+  
+  h1 {
+    font-family: 'Gowun Batang', serif;
+    font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    color: var(--bg-paper);
+  }
+  
+  h1 .accent { color: var(--accent); font-style: italic; }
+  
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    flex-wrap: wrap;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  
+  .header-meta strong {
+    color: var(--bg-paper);
+    font-weight: 500;
+  }
+  
+  /* Briefing - dossier style */
+  .briefing {
+    background: var(--bg-paper);
+    color: var(--ink);
+    padding: 36px 40px;
+    margin-bottom: 48px;
+    position: relative;
+    border-left: 6px solid var(--accent);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  
+  .briefing::before {
+    content: 'CONFIDENTIAL';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 4px 12px;
+    transform: rotate(8deg);
+    opacity: 0.6;
+  }
+  
+  .briefing-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  
+  .briefing h2 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  
+  .briefing p {
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+  
+  .briefing p:last-child { margin-bottom: 0; }
+  
+  .briefing .handwritten {
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 22px;
+    color: var(--accent);
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line-dark);
+    line-height: 1.4;
+  }
+  
+  /* Evidence grid */
+  .evidence-section {
+    margin-bottom: 48px;
+  }
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .section-title h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--bg-paper);
+  }
+  
+  .section-title .line {
+    flex: 1;
+    height: 1px;
+    background: var(--bg-paper);
+    opacity: 0.3;
+  }
+  
+  .section-title .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    background: var(--accent);
+    color: var(--bg-paper);
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+  
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  
+  @media (max-width: 880px) {
+    .evidence-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  
+  @media (max-width: 580px) {
+    .evidence-grid { grid-template-columns: 1fr; }
+  }
+  
+  /* Evidence card - polaroid style */
+  .evidence {
+    background: var(--bg-card);
+    padding: 12px 12px 16px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  
+  .evidence:nth-child(odd) { transform: rotate(-1deg); }
+  .evidence:nth-child(even) { transform: rotate(0.8deg); }
+  .evidence:nth-child(3n) { transform: rotate(-0.5deg); }
+  
+  .evidence:hover {
+    transform: rotate(0) scale(1.03);
+    z-index: 5;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+  }
+  
+  .evidence-tag {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: var(--accent);
+    color: var(--bg-paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 2;
+  }
+  
+  .evidence-photo {
+    aspect-ratio: 1;
+    background: #f0e8d5;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  
+  .evidence-photo svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  .evidence-caption {
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.3;
+    text-align: center;
+    padding: 4px 8px;
+  }
+  
+  /* Modal - investigation board */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .modal-bg.active { display: flex; }
+  
+  .modal {
+    background: var(--bg-paper);
+    color: var(--ink);
+    max-width: 920px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+  }
+  
+  @media (max-width: 720px) {
+    .modal { grid-template-columns: 1fr; }
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: var(--ink);
+    border: none;
+    color: var(--bg-paper);
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+    font-family: inherit;
+  }
+  
+  .modal-photo-wrap {
+    background: #2a2520;
+    padding: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-photo-header {
+    color: var(--bg-paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modal-photo-header .evid-num {
+    background: var(--accent);
+    padding: 3px 10px;
+  }
+  
+  .modal-photo {
+    aspect-ratio: 1;
+    background: #f0e8d5;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin-bottom: 16px;
+  }
+  
+  .modal-photo svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  .modal-photo-note {
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    line-height: 1.5;
+    text-align: center;
+  }
+  
+  .modal-details {
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--line-dark);
+  }
+  
+  .modal-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  
+  .modal-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  
+  .modal-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  
+  .modal-instagram-caption {
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    background: white;
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent);
+    color: var(--ink);
+    white-space: pre-line;
+  }
+  
+  .modal-hashtags {
+    color: #00376b;
+    font-size: 13px;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+  
+  .modal-location {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+  }
+  
+  .modal-location::before { content: '📍 '; }
+  
+  /* Investigation form */
+  .investigation {
+    background: var(--bg-paper);
+    color: var(--ink);
+    padding: 40px;
+    margin-top: 48px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  
+  .investigation::before {
+    content: 'EVIDENCE REPORT';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 4px 12px;
+    transform: rotate(5deg);
+    opacity: 0.7;
+  }
+  
+  .investigation h2 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  
+  .investigation > p {
+    color: var(--ink-dim);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  
+  .quiz-item {
+    background: var(--bg-card);
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    position: relative;
+  }
+  
+  .quiz-item::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 16px;
+    width: 24px;
+    height: 8px;
+    background: rgba(255, 240, 180, 0.6);
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  .quiz-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  
+  .quiz-question {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  
+  .quiz-input {
+    width: 100%;
+    background: white;
+    border: none;
+    border-bottom: 1px solid var(--line-dark);
+    padding: 8px 4px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 20px;
+    color: var(--ink);
+    transition: border-color 0.2s;
+  }
+  
+  .quiz-input:focus {
+    outline: none;
+    border-bottom-color: var(--accent);
+  }
+  
+  .quiz-input.correct {
+    border-bottom-color: var(--success);
+    color: var(--success);
+  }
+  
+  .quiz-input.wrong {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+  
+  .submit-section {
+    margin-top: 32px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    background: var(--ink);
+    color: var(--bg-paper);
+    border: none;
+    padding: 14px 32px;
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  
+  .btn:hover { background: var(--accent); }
+  
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-dark);
+  }
+  
+  .btn-ghost:hover {
+    background: var(--bg-card);
+    border-color: var(--ink);
+  }
+  
+  /* Result section */
+  .result {
+    margin-top: 32px;
+    display: none;
+  }
+  
+  .result.show { display: block; animation: slideUp 0.5s ease; }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .result-banner {
+    background: var(--ink);
+    color: var(--bg-paper);
+    padding: 28px 32px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  
+  .result-banner::before,
+  .result-banner::after {
+    content: '✦';
+    color: var(--accent);
+    font-size: 16px;
+    margin: 0 16px;
+  }
+  
+  .result-score {
+    font-family: 'Gowun Batang', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin: 12px 0;
+  }
+  
+  .result-score .total {
+    color: var(--ink-faint);
+    font-size: 24px;
+  }
+  
+  .result-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  
+  .result-message {
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 24px;
+    line-height: 1.4;
+    margin-top: 16px;
+    color: var(--bg-paper);
+  }
+  
+  .reveal-list {
+    background: var(--bg-card);
+    padding: 24px 28px;
+    border: 1px solid var(--line);
+  }
+  
+  .reveal-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 20px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+  }
+  
+  .reveal-item {
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line-dark);
+  }
+  
+  .reveal-item:last-child { border-bottom: none; }
+  
+  .reveal-item-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .check {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  
+  .check.yes { background: var(--success); color: white; }
+  .check.no { background: var(--accent); color: white; }
+  
+  .reveal-q {
+    font-size: 14px;
+    color: var(--ink-dim);
+    flex: 1;
+  }
+  
+  .reveal-answer {
+    font-family: 'Gowun Batang', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    padding-left: 34px;
+    margin-bottom: 4px;
+  }
+  
+  .reveal-source {
+    font-size: 12px;
+    color: var(--accent);
+    padding-left: 34px;
+    font-style: italic;
+  }
+  
+  .final-warning {
+    background: var(--ink);
+    color: var(--bg-paper);
+    padding: 32px;
+    margin-top: 24px;
+    border-left: 6px solid var(--accent);
+    position: relative;
+  }
+  
+  .final-warning::before {
+    content: '!';
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    color: var(--bg-paper);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Gowun Batang', serif;
+  }
+  
+  .final-warning h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: var(--bg-paper);
+  }
+  
+  .final-warning p {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+    color: var(--bg-paper);
+  }
+  
+  .final-warning .hand {
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 24px;
+    color: #f8b5b5;
+    margin-top: 16px;
+    line-height: 1.4;
+  }
+  
+  @media (max-width: 640px) {
+    .wrap { padding: 24px 16px 60px; }
+    .briefing { padding: 24px 22px; }
+    .investigation { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="case-mark">
+    <span>Case File · 사건번호 2026-001</span>
+    <span class="stamp">긴급</span>
+  </div>
+  <h1>신원미상 <span class="accent">피해자</span></h1>
+  <div class="header-meta">
+    <span>담당: <strong>당신 (형사)</strong></span>
+    <span>분류: <strong>응급 신원 확인</strong></span>
+    <span>상태: <strong>피해자 의식불명</strong></span>
+    <span>제한시간: <strong>10분</strong></span>
+  </div>
+</header>
+
+<!-- Briefing -->
+<div class="briefing">
+  <div class="briefing-label">▸ 사건 브리핑 (URGENT)</div>
+  <h2>어젯밤 23:47, 강남역 6번 출구 인근.</h2>
+  <p>10대 후반으로 추정되는 여성이 의식불명 상태로 발견되었다. 현장에서 신분증, 지갑 등은 발견되지 않았고 <strong>핸드폰 한 대</strong>만 소지하고 있었다. 현재 OO대학병원 응급실로 이송됐으나 의식이 돌아오지 않은 상태.</p>
+  <p>병원 측은 <strong>보호자 동의가 필요한 응급 수술</strong>을 앞두고 있어 가족 연락이 시급하다. 그러나 피해자의 신원을 확인할 방법이 없다.</p>
+  <p>핸드폰을 입수했으나 잠금화면이 걸려있고, 전화·문자·카카오톡·갤러리 등 <strong>다른 모든 앱은 잠겨있는 상태</strong>다. 그런데 단 하나, <strong>인스타그램만 자동 로그인된 채로 열려있다.</strong> 피해자가 마지막으로 보던 앱이었던 것으로 추정된다.</p>
+  <p>유일한 단서는 이 인스타 계정 <strong>'minz_._daily'</strong> 하나뿐. 본인 정보는 거의 적혀있지 않지만, 9장의 게시물 사진에 단서가 있을 수 있다. 짝과 함께 사진을 한 장씩 확대해보고, <strong>피해자의 본명·학교·집 주소·가족 연락처</strong>를 알아내라. 시간이 없다.</p>
+  <div class="handwritten">"인스타 하나만 가지고 신원을 알아내야 한다고? 가능하긴 한가..."</div>
+</div>
+
+<!-- Evidence Section -->
+<div class="evidence-section">
+  <div class="section-title">
+    <span class="badge">피해자 핸드폰</span>
+    <h3>인스타그램 게시물 · 9장</h3>
+    <div class="line"></div>
+  </div>
+  
+  <div class="evidence-grid" id="evidence-grid"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">×</button>
+    <div class="modal-photo-wrap">
+      <div class="modal-photo-header">
+        <span id="modal-num"></span>
+        <span class="evid-num" id="modal-evidence-num"></span>
+      </div>
+      <div class="modal-photo" id="modal-photo"></div>
+      <div class="modal-photo-note">↑ 사진을 자세히 보세요. 작은 글씨까지.</div>
+    </div>
+    <div class="modal-details">
+      <div class="modal-section">
+        <div class="modal-label">▸ Caption (캡션)</div>
+        <div class="modal-instagram-caption" id="modal-caption"></div>
+        <div class="modal-hashtags" id="modal-hashtags"></div>
+        <div class="modal-location" id="modal-location"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">▸ Meta Data</div>
+        <div class="modal-text" id="modal-meta"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Investigation Report -->
+<div class="investigation">
+  <h2>📋 신원 확인 보고서</h2>
+  <p>피해자 핸드폰의 인스타그램을 모두 살펴봤다면, 짝과 함께 다음 항목들을 작성하세요. 가족에게 연락하려면 신원 정보가 정확해야 합니다.</p>
+  
+  <div class="quiz-grid">
+    <div class="quiz-item">
+      <div class="quiz-label">Q1 · Identity</div>
+      <div class="quiz-question">대상자의 본명 (성+이름)</div>
+      <input type="text" class="quiz-input" id="q-name" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q2 · Education</div>
+      <div class="quiz-question">재학 중인 학교 이름</div>
+      <input type="text" class="quiz-input" id="q-school" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q3 · Residence</div>
+      <div class="quiz-question">거주 지역 (구 + 동)</div>
+      <input type="text" class="quiz-input" id="q-area" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q4 · DOB</div>
+      <div class="quiz-question">생년월일 (월/일)</div>
+      <input type="text" class="quiz-input" id="q-birth" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q5 · Routine</div>
+      <div class="quiz-question">다니는 학원 이름</div>
+      <input type="text" class="quiz-input" id="q-academy" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q6 · Pet</div>
+      <div class="quiz-question">반려동물 (종류 + 이름)</div>
+      <input type="text" class="quiz-input" id="q-pet" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q7 · Hangout</div>
+      <div class="quiz-question">자주 가는 카페 (지점명)</div>
+      <input type="text" class="quiz-input" id="q-cafe" placeholder="...">
+    </div>
+    
+    <div class="quiz-item">
+      <div class="quiz-label">Q8 · Contact</div>
+      <div class="quiz-question">휴대폰 번호 끝 4자리</div>
+      <input type="text" class="quiz-input" id="q-phone" placeholder="...">
+    </div>
+  </div>
+  
+  <div class="submit-section">
+    <button class="btn" id="submit-btn">▸ 신원 확인 완료</button>
+    <button class="btn btn-ghost" id="reset-btn">다시 작성</button>
+  </div>
+  
+  <div class="result" id="result">
+    <div class="result-banner">
+      <div class="result-title">— 신원 확인 결과 —</div>
+      <div class="result-score"><span id="score">0</span><span class="total"> / 8 단서</span></div>
+      <div class="result-message" id="result-message"></div>
+    </div>
+    
+    <div class="reveal-list">
+      <div class="reveal-title">▸ 피해자 신원 정보</div>
+      <div id="reveal-items"></div>
+    </div>
+    
+    <div class="final-warning">
+      <h3>그런데... 잠깐.</h3>
+      <p>축하합니다. 당신은 신원미상 피해자의 본명, 학교, 집 주소, 전화번호, 가족 연락처까지 모두 알아냈습니다. 이제 가족에게 연락할 수 있겠죠.</p>
+      <p>하지만 한 가지만 생각해봅시다.</p>
+      <p><strong>당신이 형사가 아니라, 그냥 길에서 이 핸드폰을 주운 사람이었다면?</strong></p>
+      <p>→ 집 주소를 알았으니 따라갈 수 있고<br>
+      → 가족 이름을 알았으니 "엄마 친구"라며 사기 칠 수 있고<br>
+      → 학교를 알았으니 등하굣길을 노릴 수 있고<br>
+      → 사진을 합성해 협박할 수도 있습니다</p>
+      <p>피해자는 자기 정보를 한 번도 SNS에 <strong>직접 적은 적이 없습니다.</strong> 그저 평범한 일상 사진을 올렸을 뿐이에요. 그런데 우리는 10분 만에 모든 걸 알아냈습니다.</p>
+      <div class="hand">여러분이 어제 SNS에 올린 사진에는<br>몇 개의 단서가 들어있을까요?</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// Posts data with SVG illustrations
+const posts = [
+  {
+    id: 1,
+    tag: 'EVD-01',
+    caption: '오늘도 출근 전 단골 ☕\n역시 여기 라떼가 최고\n매일 아침 7시 루틴',
+    hashtags: '#스타벅스 #역삼역점 #모닝커피 #출근전 #직장인루틴',
+    location: '스타벅스 역삼역점',
+    meta: '게시 2일 전 · 좋아요 42개 · 댓글 5개',
+    polaroidCaption: '오늘의 라떼 ☕',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cafebg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d4a574"/>
+          <stop offset="100%" stop-color="#8b6f47"/>
+        </linearGradient>
+      </defs>
+      <rect width="300" height="300" fill="url(#cafebg)"/>
+      <!-- Wood table -->
+      <rect y="200" width="300" height="100" fill="#5c4530"/>
+      <rect y="195" width="300" height="8" fill="#3d2c1f"/>
+      <!-- Cup -->
+      <ellipse cx="150" cy="200" rx="80" ry="14" fill="#1a1a1a" opacity="0.3"/>
+      <path d="M 90 95 L 95 195 Q 95 200 100 200 L 200 200 Q 205 200 205 195 L 210 95 Z" fill="#ffffff"/>
+      <path d="M 90 95 L 95 195 Q 95 200 100 200 L 200 200 Q 205 200 205 195 L 210 95 Z" fill="none" stroke="#ddd" stroke-width="1"/>
+      <!-- Cup top - coffee -->
+      <ellipse cx="150" cy="98" rx="60" ry="10" fill="#3d2817"/>
+      <ellipse cx="150" cy="96" rx="55" ry="8" fill="#5c3a25"/>
+      <!-- Sleeve / Logo -->
+      <rect x="93" y="120" width="114" height="60" fill="#006241"/>
+      <circle cx="150" cy="150" r="22" fill="#006241" stroke="#ffffff" stroke-width="2"/>
+      <text x="150" y="155" text-anchor="middle" fill="#ffffff" font-size="9" font-family="serif" font-weight="bold">STARBUCKS</text>
+      <!-- Store sticker - the clue! -->
+      <rect x="100" y="185" width="100" height="14" fill="#ffffff" stroke="#999" stroke-width="0.5"/>
+      <text x="150" y="195" text-anchor="middle" fill="#000" font-size="8" font-family="monospace" font-weight="bold">역삼역점 · 02-555-3421</text>
+      <!-- Steam -->
+      <path d="M 130 80 Q 128 70 132 60 Q 134 50 130 40" stroke="#fff" stroke-width="2" fill="none" opacity="0.6"/>
+      <path d="M 150 80 Q 152 70 148 60 Q 146 50 150 40" stroke="#fff" stroke-width="2" fill="none" opacity="0.6"/>
+      <path d="M 170 80 Q 168 70 172 60 Q 174 50 170 40" stroke="#fff" stroke-width="2" fill="none" opacity="0.6"/>
+    </svg>`
+  },
+  {
+    id: 2,
+    tag: 'EVD-02',
+    caption: '학교 가는 길~\n오늘따라 컨디션 좋음 ✨\n시험 끝나서 그런가',
+    hashtags: '#일상 #학교 #셀카 #고3 #화이팅',
+    location: '',
+    meta: '게시 3일 전 · 좋아요 89개 · 댓글 12개',
+    polaroidCaption: '거울 셀카 🪞',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Bathroom background -->
+      <rect width="300" height="300" fill="#b8d4e3"/>
+      <!-- Tile pattern -->
+      <g opacity="0.25">
+        <line x1="0" y1="75" x2="300" y2="75" stroke="#ffffff" stroke-width="1"/>
+        <line x1="0" y1="150" x2="300" y2="150" stroke="#ffffff" stroke-width="1"/>
+        <line x1="0" y1="225" x2="300" y2="225" stroke="#ffffff" stroke-width="1"/>
+        <line x1="75" y1="0" x2="75" y2="300" stroke="#ffffff" stroke-width="1"/>
+        <line x1="150" y1="0" x2="150" y2="300" stroke="#ffffff" stroke-width="1"/>
+        <line x1="225" y1="0" x2="225" y2="300" stroke="#ffffff" stroke-width="1"/>
+      </g>
+      <!-- Mirror frame -->
+      <rect x="30" y="20" width="240" height="260" fill="#3a5a7a"/>
+      <rect x="38" y="28" width="224" height="244" fill="#c8dce8"/>
+      <!-- Inside mirror reflection -->
+      <!-- Wall behind (reflected) -->
+      <rect x="38" y="28" width="224" height="244" fill="#dde8f0"/>
+      <!-- School notice board on the wall (visible in mirror) - THE CLUE -->
+      <rect x="50" y="38" width="130" height="40" fill="#ffffff" stroke="#999" stroke-width="1"/>
+      <circle cx="62" cy="52" r="7" fill="#b8332b"/>
+      <text x="62" y="56" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold">한</text>
+      <text x="120" y="54" text-anchor="middle" fill="#1a1a1a" font-size="9" font-family="sans-serif" font-weight="bold">한솔여자고등학교</text>
+      <text x="120" y="68" text-anchor="middle" fill="#666" font-size="7" font-family="sans-serif">3층 여학생 화장실</text>
+      <!-- Person body (reflection) -->
+      <!-- Hair -->
+      <path d="M 130 110 Q 130 90 150 88 Q 170 90 170 110 L 175 145 Q 170 150 165 145 L 160 130 Q 150 132 140 130 L 135 145 Q 130 150 125 145 Z" fill="#3a2a1a"/>
+      <!-- Face -->
+      <ellipse cx="150" cy="125" rx="20" ry="24" fill="#f5d8c0"/>
+      <!-- Face partially covered by phone -->
+      <!-- Hair front -->
+      <path d="M 130 108 Q 140 102 150 105 L 145 118 Q 138 115 132 118 Z" fill="#2a1a0a"/>
+      <path d="M 170 108 Q 160 102 150 105 L 155 118 Q 162 115 168 118 Z" fill="#2a1a0a"/>
+      <!-- Eyes (one visible above phone) -->
+      <ellipse cx="143" cy="125" rx="2" ry="1.5" fill="#1a1a1a"/>
+      <!-- Eyebrow -->
+      <path d="M 139 119 Q 143 117 147 119" stroke="#2a1a0a" stroke-width="1.5" fill="none"/>
+      <!-- Neck -->
+      <rect x="143" y="148" width="14" height="10" fill="#f5d8c0"/>
+      <!-- School uniform - white shirt -->
+      <path d="M 115 158 Q 115 155 120 155 L 180 155 Q 185 155 185 158 L 195 240 L 105 240 Z" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+      <!-- Uniform collar -->
+      <path d="M 135 158 L 150 175 L 165 158 L 160 158 L 150 168 L 140 158 Z" fill="#1a3a5a"/>
+      <!-- Uniform tie/ribbon -->
+      <path d="M 145 170 L 155 170 L 158 185 L 150 192 L 142 185 Z" fill="#b8332b"/>
+      <!-- Right arm holding phone up -->
+      <path d="M 165 165 Q 175 165 180 175 L 185 195 Q 180 200 175 195 L 172 178 Z" fill="#f5d8c0"/>
+      <!-- Left arm down at side -->
+      <path d="M 115 165 L 110 200 L 105 230 L 113 232 L 118 200 L 122 170 Z" fill="#ffffff" stroke="#cccccc" stroke-width="1"/>
+      <!-- Phone (in raised hand) - covers part of face -->
+      <rect x="135" y="115" width="38" height="60" rx="5" fill="#1a1a1a"/>
+      <rect x="138" y="118" width="32" height="54" rx="3" fill="#2c3e50"/>
+      <!-- Phone camera dot -->
+      <circle cx="154" cy="123" r="2" fill="#0a0a0a"/>
+      <circle cx="154" cy="123" r="1" fill="#3498db"/>
+      <!-- Phone screen reflection -->
+      <rect x="140" y="128" width="28" height="42" fill="#34495e" opacity="0.6"/>
+      <!-- Flash highlight -->
+      <circle cx="148" cy="145" r="8" fill="#ffffff" opacity="0.4"/>
+      <!-- Bathroom sink (bottom reflection) -->
+      <ellipse cx="150" cy="265" rx="80" ry="8" fill="#ffffff" opacity="0.5"/>
+      <rect x="70" y="255" width="160" height="15" fill="#ffffff" opacity="0.3"/>
+    </svg>`
+  },
+  {
+    id: 3,
+    tag: 'EVD-03',
+    caption: '엄빠 차 새로 뽑음 ㅎㅎ\n아빠가 운전 가르쳐주신대\n다음주부터 연수 시작!',
+    hashtags: '#새차 #운전연수 #아빠최고 #SUV',
+    location: '',
+    meta: '게시 4일 전 · 좋아요 156개 · 댓글 23개',
+    polaroidCaption: '엄빠 새 차 🚗',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Garage / driveway bg -->
+      <rect width="300" height="300" fill="#2c3e50"/>
+      <rect y="200" width="300" height="100" fill="#3d4f5f"/>
+      <!-- Concrete cracks -->
+      <line x1="40" y1="240" x2="80" y2="260" stroke="#2a3a4a" stroke-width="1"/>
+      <line x1="200" y1="230" x2="260" y2="280" stroke="#2a3a4a" stroke-width="1"/>
+      <!-- Car (SUV from front) -->
+      <rect x="50" y="100" width="200" height="120" rx="20" fill="#1a1a1a"/>
+      <!-- Windshield -->
+      <path d="M 70 115 L 230 115 L 220 155 L 80 155 Z" fill="#0a1520"/>
+      <!-- Hood/grille -->
+      <rect x="80" y="165" width="140" height="35" fill="#0a0a0a"/>
+      <rect x="85" y="170" width="130" height="25" fill="#1a1a1a"/>
+      <!-- Headlights -->
+      <ellipse cx="85" cy="180" rx="20" ry="10" fill="#e8e8e8"/>
+      <ellipse cx="215" cy="180" rx="20" ry="10" fill="#e8e8e8"/>
+      <ellipse cx="85" cy="180" rx="15" ry="7" fill="#ffeb99"/>
+      <ellipse cx="215" cy="180" rx="15" ry="7" fill="#ffeb99"/>
+      <!-- Logo -->
+      <circle cx="150" cy="180" r="14" fill="#c0c0c0" stroke="#666" stroke-width="1"/>
+      <text x="150" y="185" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">H</text>
+      <!-- License plate - THE CLUE -->
+      <rect x="115" y="205" width="70" height="22" fill="#ffffff" stroke="#000" stroke-width="1"/>
+      <text x="150" y="221" text-anchor="middle" fill="#000" font-size="14" font-family="monospace" font-weight="bold">12가 3456</text>
+      <!-- Keys in foreground -->
+      <g transform="translate(120, 240) rotate(15)">
+        <circle cx="20" cy="20" r="14" fill="none" stroke="#c0c0c0" stroke-width="3"/>
+        <rect x="32" y="18" width="40" height="5" fill="#c0c0c0"/>
+        <rect x="65" y="14" width="8" height="13" fill="#c0c0c0"/>
+        <!-- Key fob -->
+        <rect x="-10" y="10" width="22" height="14" rx="3" fill="#1a1a1a" stroke="#c0c0c0" stroke-width="1"/>
+        <text x="1" y="20" fill="#fff" font-size="6" font-weight="bold">H</text>
+      </g>
+    </svg>`
+  },
+  {
+    id: 4,
+    tag: 'EVD-04',
+    caption: '오늘도 학원 끝!\n수학 미친듯이 어려움 ㅠㅠ\n친구들이랑 같이라 그나마 버팀',
+    hashtags: '#학원 #수능 #공부 #친구들 #지친다',
+    location: '강남종로학원 역삼점',
+    meta: '게시 5일 전 · 좋아요 67개 · 댓글 9개',
+    polaroidCaption: '학원 끝!! 📚',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Evening sky -->
+      <defs>
+        <linearGradient id="evening" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff9a44"/>
+          <stop offset="100%" stop-color="#ffd89b"/>
+        </linearGradient>
+      </defs>
+      <rect width="300" height="300" fill="url(#evening)"/>
+      <!-- Building -->
+      <rect x="0" y="40" width="300" height="180" fill="#5a4a3a"/>
+      <!-- Building windows -->
+      <g fill="#ffeb99" opacity="0.7">
+        <rect x="20" y="60" width="25" height="30"/>
+        <rect x="60" y="60" width="25" height="30"/>
+        <rect x="100" y="60" width="25" height="30"/>
+        <rect x="140" y="60" width="25" height="30"/>
+        <rect x="180" y="60" width="25" height="30"/>
+        <rect x="220" y="60" width="25" height="30"/>
+        <rect x="260" y="60" width="25" height="30"/>
+        <rect x="20" y="105" width="25" height="30"/>
+        <rect x="60" y="105" width="25" height="30"/>
+        <rect x="100" y="105" width="25" height="30" fill="#5a4a3a"/>
+        <rect x="140" y="105" width="25" height="30"/>
+        <rect x="180" y="105" width="25" height="30"/>
+        <rect x="220" y="105" width="25" height="30" fill="#5a4a3a"/>
+        <rect x="260" y="105" width="25" height="30"/>
+      </g>
+      <!-- Building sign - THE CLUE -->
+      <rect x="50" y="150" width="200" height="50" fill="#b8332b" stroke="#fff" stroke-width="2"/>
+      <text x="150" y="172" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold" font-family="sans-serif">강남종로학원</text>
+      <text x="150" y="190" text-anchor="middle" fill="#fff" font-size="12" font-family="sans-serif">역삼점 · 수능 전문</text>
+      <!-- Entrance -->
+      <rect x="120" y="200" width="60" height="40" fill="#1a1a1a"/>
+      <rect x="125" y="205" width="50" height="35" fill="#3a4a5a"/>
+      <!-- Sidewalk -->
+      <rect y="240" width="300" height="60" fill="#a89a8a"/>
+      <!-- People silhouettes -->
+      <g fill="#2a2a2a">
+        <ellipse cx="100" cy="265" rx="8" ry="3"/>
+        <rect x="92" y="240" width="16" height="25" rx="4"/>
+        <circle cx="100" cy="235" r="6"/>
+      </g>
+      <g fill="#2a2a2a">
+        <ellipse cx="150" cy="265" rx="8" ry="3"/>
+        <rect x="142" y="238" width="16" height="27" rx="4"/>
+        <circle cx="150" cy="233" r="6"/>
+      </g>
+      <g fill="#2a2a2a">
+        <ellipse cx="200" cy="265" rx="8" ry="3"/>
+        <rect x="192" y="240" width="16" height="25" rx="4"/>
+        <circle cx="200" cy="235" r="6"/>
+      </g>
+    </svg>`
+  },
+  {
+    id: 5,
+    tag: 'EVD-05',
+    caption: '드디어 18살!!\n친구들이 깜짝 파티 해줬어 🥺\n평생 잊지 못할 11월 15일',
+    hashtags: '#생일 #18살 #1115 #생파 #감동 #생일축하해나에게',
+    location: '',
+    meta: '게시 1주 전 · 좋아요 234개 · 댓글 47개',
+    polaroidCaption: '내 생일 케이크 🎂',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Dark party bg -->
+      <rect width="300" height="300" fill="#3a1a3a"/>
+      <!-- Lights -->
+      <g fill="#ffeb99" opacity="0.6">
+        <circle cx="30" cy="40" r="3"/>
+        <circle cx="70" cy="25" r="3"/>
+        <circle cx="120" cy="35" r="3"/>
+        <circle cx="180" cy="30" r="3"/>
+        <circle cx="230" cy="40" r="3"/>
+        <circle cx="270" cy="25" r="3"/>
+      </g>
+      <!-- Table -->
+      <rect y="240" width="300" height="60" fill="#5a3a3a"/>
+      <!-- Cake bottom layer -->
+      <ellipse cx="150" cy="240" rx="100" ry="15" fill="#fff5e6"/>
+      <rect x="50" y="170" width="200" height="75" fill="#fff5e6"/>
+      <ellipse cx="150" cy="170" rx="100" ry="15" fill="#ffe6cc"/>
+      <!-- Cake decorations -->
+      <g fill="#f8b5c1">
+        <circle cx="80" cy="195" r="6"/>
+        <circle cx="120" cy="190" r="6"/>
+        <circle cx="180" cy="190" r="6"/>
+        <circle cx="220" cy="195" r="6"/>
+        <circle cx="100" cy="215" r="5"/>
+        <circle cx="150" cy="220" r="5"/>
+        <circle cx="200" cy="215" r="5"/>
+      </g>
+      <!-- Top layer -->
+      <ellipse cx="150" cy="170" rx="60" ry="10" fill="#fff5e6"/>
+      <rect x="90" y="115" width="120" height="60" fill="#fff5e6"/>
+      <ellipse cx="150" cy="115" rx="60" ry="10" fill="#ffe6cc"/>
+      <!-- Writing on cake - THE CLUE -->
+      <text x="150" y="148" text-anchor="middle" fill="#b8332b" font-size="11" font-weight="bold" font-family="serif">민지 18살 생일 축하해 💕</text>
+      <!-- Candles -->
+      <g>
+        <!-- 1 -->
+        <rect x="115" y="85" width="6" height="30" fill="#ff9a44"/>
+        <ellipse cx="118" cy="80" rx="3" ry="6" fill="#ffeb99"/>
+        <!-- 1 -->
+        <rect x="130" y="85" width="6" height="30" fill="#ff9a44"/>
+        <ellipse cx="133" cy="80" rx="3" ry="6" fill="#ffeb99"/>
+        <!-- / separator -->
+        <text x="150" y="105" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">·</text>
+        <!-- 1 -->
+        <rect x="160" y="85" width="6" height="30" fill="#a8d8a8"/>
+        <ellipse cx="163" cy="80" rx="3" ry="6" fill="#ffeb99"/>
+        <!-- 5 -->
+        <rect x="175" y="85" width="6" height="30" fill="#a8d8a8"/>
+        <ellipse cx="178" cy="80" rx="3" ry="6" fill="#ffeb99"/>
+      </g>
+      <text x="150" y="80" text-anchor="middle" fill="#fff" font-size="10" font-family="serif" font-style="italic">11월 15일</text>
+    </svg>`
+  },
+  {
+    id: 6,
+    tag: 'EVD-06 ⭐',
+    caption: '주문한 거 드디어 도착!\n아이패드 케이스 너무 예쁨 💕\n오래 기다린 보람 있다',
+    hashtags: '#택배 #아이패드 #쇼핑 #하울',
+    location: '',
+    meta: '게시 1주 전 · 좋아요 51개 · 댓글 8개',
+    polaroidCaption: '택배 왔다! 📦',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Floor -->
+      <rect width="300" height="300" fill="#d4c4a8"/>
+      <!-- Wood floor lines -->
+      <g stroke="#a89478" stroke-width="0.5" opacity="0.5">
+        <line x1="0" y1="100" x2="300" y2="100"/>
+        <line x1="0" y1="200" x2="300" y2="200"/>
+        <line x1="100" y1="0" x2="100" y2="300"/>
+        <line x1="200" y1="0" x2="200" y2="300"/>
+      </g>
+      <!-- Box shadow -->
+      <ellipse cx="150" cy="265" rx="110" ry="12" fill="#000" opacity="0.2"/>
+      <!-- Box -->
+      <path d="M 50 90 L 250 90 L 250 260 L 50 260 Z" fill="#c9a87c"/>
+      <!-- Box top -->
+      <path d="M 50 90 L 150 50 L 250 90 L 150 130 Z" fill="#dbb888"/>
+      <path d="M 50 90 L 150 130 L 250 90" fill="none" stroke="#8b6f47" stroke-width="1.5"/>
+      <!-- Tape -->
+      <rect x="50" y="105" width="200" height="14" fill="#8b6f47" opacity="0.6"/>
+      <line x1="150" y1="50" x2="150" y2="130" stroke="#8b6f47" stroke-width="2"/>
+      <!-- Shipping label - THE BIG CLUE -->
+      <rect x="75" y="140" width="150" height="105" fill="#ffffff" stroke="#333" stroke-width="1"/>
+      <!-- Label header -->
+      <rect x="75" y="140" width="150" height="18" fill="#b8332b"/>
+      <text x="150" y="153" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold" font-family="monospace">CJ대한통운 운송장</text>
+      <!-- Barcode -->
+      <g fill="#000">
+        <rect x="82" y="162" width="1" height="14"/><rect x="85" y="162" width="2" height="14"/>
+        <rect x="89" y="162" width="1" height="14"/><rect x="92" y="162" width="3" height="14"/>
+        <rect x="97" y="162" width="1" height="14"/><rect x="100" y="162" width="2" height="14"/>
+        <rect x="104" y="162" width="1" height="14"/><rect x="107" y="162" width="2" height="14"/>
+        <rect x="111" y="162" width="3" height="14"/><rect x="116" y="162" width="1" height="14"/>
+        <rect x="119" y="162" width="2" height="14"/><rect x="123" y="162" width="1" height="14"/>
+        <rect x="126" y="162" width="2" height="14"/><rect x="130" y="162" width="3" height="14"/>
+      </g>
+      <text x="98" y="184" fill="#000" font-size="6" font-family="monospace">591824736201</text>
+      <!-- Recipient -->
+      <text x="80" y="195" fill="#000" font-size="7" font-family="monospace" font-weight="bold">받는분:</text>
+      <text x="108" y="195" fill="#000" font-size="8" font-family="sans-serif" font-weight="bold">김민지</text>
+      <text x="80" y="207" fill="#000" font-size="6.5" font-family="monospace">서울특별시 강남구</text>
+      <text x="80" y="217" fill="#000" font-size="6.5" font-family="monospace">역삼동 821-15</text>
+      <text x="80" y="227" fill="#000" font-size="6.5" font-family="monospace">한솔아파트 103동 1502호</text>
+      <text x="80" y="239" fill="#000" font-size="6.5" font-family="monospace">연락처: 010-2847-7823</text>
+    </svg>`
+  },
+  {
+    id: 7,
+    tag: 'EVD-07',
+    caption: '우리 콩이 5살 생일 🐶\n오늘 건강검진 받으러 왔어요\n다행히 다 정상이래요 💕',
+    hashtags: '#포메 #포메라니안 #콩이 #반려견 #동물병원',
+    location: '역삼 행복동물병원',
+    meta: '게시 2주 전 · 좋아요 178개 · 댓글 32개',
+    polaroidCaption: '콩이 5살 🐶',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Vet clinic interior -->
+      <rect width="300" height="300" fill="#fae8d4"/>
+      <!-- Floor -->
+      <rect y="220" width="300" height="80" fill="#c9a87c"/>
+      <!-- Counter -->
+      <rect x="0" y="180" width="300" height="50" fill="#8b6f47"/>
+      <rect x="0" y="175" width="300" height="8" fill="#5c4530"/>
+      <!-- Wall sign - THE CLUE -->
+      <rect x="60" y="30" width="180" height="70" fill="#ffffff" stroke="#1a4a4a" stroke-width="3" rx="4"/>
+      <text x="150" y="55" text-anchor="middle" fill="#1a4a4a" font-size="16" font-weight="bold" font-family="sans-serif">행복동물병원</text>
+      <text x="150" y="73" text-anchor="middle" fill="#666" font-size="9" font-family="sans-serif">역삼점 · 02-555-4789</text>
+      <text x="150" y="88" text-anchor="middle" fill="#999" font-size="7" font-family="sans-serif">강남구 역삼동 OO빌딩 2F</text>
+      <!-- Paw icon -->
+      <g transform="translate(75, 50)" fill="#1a4a4a">
+        <circle cx="0" cy="0" r="3"/>
+        <circle cx="-5" cy="-5" r="2"/>
+        <circle cx="5" cy="-5" r="2"/>
+        <circle cx="-6" cy="2" r="1.5"/>
+        <circle cx="6" cy="2" r="1.5"/>
+      </g>
+      <!-- Pomeranian dog -->
+      <g transform="translate(150, 200)">
+        <!-- Body fluff -->
+        <ellipse cx="0" cy="0" rx="40" ry="30" fill="#e8b878"/>
+        <ellipse cx="-5" cy="-5" rx="38" ry="28" fill="#f0c890"/>
+        <!-- Head -->
+        <circle cx="0" cy="-25" r="22" fill="#f0c890"/>
+        <!-- Ears -->
+        <path d="M -15 -38 L -20 -50 L -8 -42 Z" fill="#d8a868"/>
+        <path d="M 15 -38 L 20 -50 L 8 -42 Z" fill="#d8a868"/>
+        <!-- Eyes -->
+        <circle cx="-7" cy="-26" r="2.5" fill="#1a1a1a"/>
+        <circle cx="7" cy="-26" r="2.5" fill="#1a1a1a"/>
+        <!-- Nose -->
+        <ellipse cx="0" cy="-18" rx="3" ry="2" fill="#1a1a1a"/>
+        <!-- Mouth -->
+        <path d="M -3 -14 Q 0 -11 3 -14" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>
+        <!-- Tongue -->
+        <ellipse cx="0" cy="-12" rx="2" ry="3" fill="#ff8b9a"/>
+        <!-- Tail -->
+        <path d="M 35 -5 Q 50 -15 45 -25" stroke="#e8b878" stroke-width="10" fill="none" stroke-linecap="round"/>
+      </g>
+      <!-- Heart -->
+      <text x="200" y="160" font-size="20" fill="#e84a5a">♥</text>
+    </svg>`
+  },
+  {
+    id: 8,
+    tag: 'EVD-08',
+    caption: '시험 기간 모드 🥲\n친구들도 다 같이 힘내자\n곧 끝난다 곧 (제발)',
+    hashtags: '#공부 #시험기간 #고3 #수능 #지친다 #ㅠㅠ',
+    location: '',
+    meta: '게시 2주 전 · 좋아요 38개 · 댓글 6개',
+    polaroidCaption: '공부 중 📱',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Desk top -->
+      <rect width="300" height="300" fill="#5a6c7d"/>
+      <!-- Desk surface -->
+      <rect y="0" width="300" height="300" fill="#2c3e50"/>
+      <!-- Notebook -->
+      <rect x="20" y="180" width="140" height="100" fill="#ffffff" transform="rotate(-3, 90, 230)"/>
+      <g stroke="#aaccdd" stroke-width="0.5" transform="rotate(-3, 90, 230)">
+        <line x1="30" y1="200" x2="150" y2="200"/>
+        <line x1="30" y1="215" x2="150" y2="215"/>
+        <line x1="30" y1="230" x2="150" y2="230"/>
+        <line x1="30" y1="245" x2="150" y2="245"/>
+        <line x1="30" y1="260" x2="150" y2="260"/>
+      </g>
+      <text x="40" y="213" fill="#1a1a1a" font-size="8" transform="rotate(-3, 90, 230)" font-family="serif">수학 공식 정리</text>
+      <text x="40" y="227" fill="#666" font-size="6" transform="rotate(-3, 90, 230)" font-family="monospace">∫ f(x)dx = F(x) + C</text>
+      <!-- Phone - THE CLUE -->
+      <rect x="180" y="30" width="100" height="220" rx="14" fill="#1a1a1a"/>
+      <rect x="186" y="50" width="88" height="190" rx="3" fill="#ffffff"/>
+      <!-- Phone notch -->
+      <rect x="220" y="38" width="20" height="6" rx="3" fill="#1a1a1a"/>
+      <!-- Status bar -->
+      <text x="194" y="60" fill="#1a1a1a" font-size="6" font-family="sans-serif" font-weight="bold">9:47</text>
+      <text x="248" y="60" fill="#1a1a1a" font-size="6" font-family="sans-serif">📶 95%</text>
+      <!-- Notification 1 -->
+      <rect x="190" y="70" width="80" height="35" fill="#f0f0f0" rx="3"/>
+      <rect x="192" y="72" width="16" height="16" rx="3" fill="#fae100"/>
+      <text x="200" y="83" text-anchor="middle" fill="#3c1e1e" font-size="9" font-weight="bold">K</text>
+      <text x="212" y="80" fill="#1a1a1a" font-size="6" font-weight="bold">지유</text>
+      <text x="248" y="80" fill="#999" font-size="5">방금</text>
+      <text x="212" y="89" fill="#1a1a1a" font-size="5.5">야 김민지 너 숙제 다</text>
+      <text x="212" y="96" fill="#1a1a1a" font-size="5.5">했어?ㅋㅋ나 도와줘</text>
+      <text x="212" y="103" fill="#1a1a1a" font-size="5.5">제발 ㅠㅠㅠ</text>
+      <!-- Notification 2 -->
+      <rect x="190" y="110" width="80" height="35" fill="#f0f0f0" rx="3"/>
+      <rect x="192" y="112" width="16" height="16" rx="3" fill="#fae100"/>
+      <text x="200" y="123" text-anchor="middle" fill="#3c1e1e" font-size="9" font-weight="bold">K</text>
+      <text x="212" y="120" fill="#1a1a1a" font-size="6" font-weight="bold">엄마💕</text>
+      <text x="248" y="120" fill="#999" font-size="5">2분</text>
+      <text x="212" y="129" fill="#1a1a1a" font-size="5.5">민지야 학원 끝나면</text>
+      <text x="212" y="136" fill="#1a1a1a" font-size="5.5">바로 집에 와</text>
+      <text x="212" y="143" fill="#1a1a1a" font-size="5.5">콩이 산책 시켜야해</text>
+      <!-- Notification 3 -->
+      <rect x="190" y="150" width="80" height="28" fill="#f0f0f0" rx="3"/>
+      <rect x="192" y="152" width="16" height="16" rx="3" fill="#0095f6"/>
+      <text x="200" y="163" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold">IG</text>
+      <text x="212" y="160" fill="#1a1a1a" font-size="6" font-weight="bold">instagram</text>
+      <text x="248" y="160" fill="#999" font-size="5">5분</text>
+      <text x="212" y="169" fill="#1a1a1a" font-size="5.5">minz_._daily 님이</text>
+      <text x="212" y="176" fill="#1a1a1a" font-size="5.5">팔로워 284명을 보유</text>
+      <!-- Pencil -->
+      <rect x="40" y="60" width="100" height="8" rx="2" fill="#ffc04a" transform="rotate(25, 90, 64)"/>
+      <polygon points="135,55 145,64 135,73" fill="#1a1a1a" transform="rotate(25, 90, 64)"/>
+    </svg>`
+  },
+  {
+    id: 9,
+    tag: 'EVD-09 ⭐',
+    caption: '드디어 학생증 새로 받음!\n사진이 너무 별로지만\n3년만 더 버티자 ㅠㅠ',
+    hashtags: '#학생증 #고3 #한솔여고 #일상 #학교생활',
+    location: '',
+    meta: '게시 3주 전 · 좋아요 92개 · 댓글 14개',
+    polaroidCaption: '학생증 받음 🎫',
+    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Desk bg -->
+      <rect width="300" height="300" fill="#d1d5db"/>
+      <!-- Wood texture -->
+      <g opacity="0.3" stroke="#8b8478" stroke-width="0.5">
+        <line x1="0" y1="50" x2="300" y2="50"/>
+        <line x1="0" y1="120" x2="300" y2="120"/>
+        <line x1="0" y1="200" x2="300" y2="200"/>
+        <line x1="0" y1="270" x2="300" y2="270"/>
+      </g>
+      <!-- Student ID card -->
+      <g transform="translate(35, 60) rotate(-4)">
+        <!-- Card shadow -->
+        <rect x="3" y="3" width="230" height="160" rx="8" fill="#000" opacity="0.2"/>
+        <!-- Card -->
+        <rect width="230" height="160" rx="8" fill="#ffffff" stroke="#888" stroke-width="1"/>
+        <!-- Top stripe -->
+        <rect width="230" height="38" rx="8" fill="#1a4a8e"/>
+        <rect y="30" width="230" height="8" fill="#1a4a8e"/>
+        <text x="115" y="22" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold" font-family="sans-serif">한솔여자고등학교</text>
+        <text x="115" y="32" text-anchor="middle" fill="#ffd89b" font-size="7" font-family="sans-serif">HANSOL GIRLS' HIGH SCHOOL</text>
+        <!-- Photo placeholder -->
+        <rect x="15" y="50" width="65" height="85" fill="#e0e0e0" stroke="#aaa" stroke-width="0.5"/>
+        <circle cx="47" cy="80" r="14" fill="#b8a890"/>
+        <ellipse cx="47" cy="120" rx="22" ry="18" fill="#b8a890"/>
+        <text x="47" y="145" text-anchor="middle" fill="#666" font-size="5" font-family="sans-serif">PHOTO</text>
+        <!-- Info -->
+        <text x="92" y="58" fill="#666" font-size="6" font-family="monospace">학년 / 반</text>
+        <text x="92" y="70" fill="#1a1a1a" font-size="11" font-weight="bold" font-family="sans-serif">3학년 7반</text>
+        <text x="92" y="83" fill="#666" font-size="6" font-family="monospace">학번</text>
+        <text x="92" y="95" fill="#1a1a1a" font-size="11" font-weight="bold" font-family="monospace">20230315</text>
+        <text x="92" y="108" fill="#666" font-size="6" font-family="monospace">성명</text>
+        <text x="92" y="122" fill="#1a1a1a" font-size="14" font-weight="bold" font-family="serif">김민지</text>
+        <text x="92" y="135" fill="#666" font-size="6" font-family="monospace">발급일</text>
+        <text x="92" y="146" fill="#1a1a1a" font-size="9" font-family="monospace">2025.03.02</text>
+        <!-- Barcode -->
+        <g fill="#000">
+          <rect x="15" y="142" width="1" height="14"/><rect x="18" y="142" width="2" height="14"/>
+          <rect x="22" y="142" width="1" height="14"/><rect x="25" y="142" width="3" height="14"/>
+          <rect x="30" y="142" width="1" height="14"/><rect x="33" y="142" width="2" height="14"/>
+          <rect x="37" y="142" width="1" height="14"/><rect x="40" y="142" width="2" height="14"/>
+          <rect x="44" y="142" width="3" height="14"/><rect x="49" y="142" width="1" height="14"/>
+          <rect x="52" y="142" width="2" height="14"/><rect x="56" y="142" width="1" height="14"/>
+          <rect x="59" y="142" width="2" height="14"/><rect x="63" y="142" width="3" height="14"/>
+          <rect x="68" y="142" width="1" height="14"/><rect x="71" y="142" width="2" height="14"/>
+        </g>
+      </g>
+      <!-- Coffee cup partial -->
+      <ellipse cx="240" cy="240" rx="35" ry="8" fill="#1a1a1a" opacity="0.2"/>
+      <path d="M 215 175 L 218 235 Q 218 240 222 240 L 258 240 Q 262 240 262 235 L 265 175 Z" fill="#fff"/>
+      <ellipse cx="240" cy="175" rx="25" ry="5" fill="#3d2817"/>
+    </svg>`
+  }
+];
+
+// Correct answers
+const answers = {
+  'q-name': {
+    correct: ['김민지', '민지', 'minji', '김 민지'],
+    answer: '김민지',
+    source: 'EVD-06 택배 운송장, EVD-09 학생증'
+  },
+  'q-school': {
+    correct: ['한솔여자고등학교', '한솔여고', '한솔여자고', '한솔', '한솔여자고교'],
+    answer: '한솔여자고등학교 (3학년 7반)',
+    source: 'EVD-02 거울에 비친 학교 안내판, EVD-09 학생증'
+  },
+  'q-area': {
+    correct: ['강남구 역삼동', '강남 역삼', '역삼동', '서울 강남구 역삼동', '서울시 강남구 역삼동', '강남구역삼동', '서울특별시 강남구 역삼동'],
+    answer: '서울시 강남구 역삼동 (한솔아파트 103동 1502호까지 노출)',
+    source: 'EVD-06 택배 운송장'
+  },
+  'q-birth': {
+    correct: ['11월 15일', '1115', '11/15', '11.15', '11-15', '11월15일', '11월 15', '11 15'],
+    answer: '11월 15일',
+    source: 'EVD-05 케이크 위 글씨와 양초, 프로필 바이오 "1115"'
+  },
+  'q-academy': {
+    correct: ['강남종로학원', '종로학원', '강남종로학원 역삼점', '강남종로', '강남 종로학원'],
+    answer: '강남종로학원 역삼점',
+    source: 'EVD-04 학원 건물 간판'
+  },
+  'q-pet': {
+    correct: ['강아지 콩이', '콩이', '포메 콩이', '포메라니안 콩이', '강아지콩이', '포메라니안', '포메'],
+    answer: '포메라니안 "콩이" (5살)',
+    source: 'EVD-07 사진과 캡션, 프로필 바이오 "콩이맘"'
+  },
+  'q-cafe': {
+    correct: ['스타벅스 역삼역점', '스타벅스역삼역점', '스벅 역삼역점', '역삼역점', '스타벅스역삼점', '스타벅스 역삼점'],
+    answer: '스타벅스 역삼역점',
+    source: 'EVD-01 컵의 매장 스티커, 위치 태그'
+  },
+  'q-phone': {
+    correct: ['7823'],
+    answer: '7823 (전체 번호: 010-2847-7823)',
+    source: 'EVD-06 택배 운송장 연락처'
+  }
+};
+
+// Render evidence grid
+const gridEl = document.getElementById('evidence-grid');
+gridEl.innerHTML = posts.map(p => `
+  <div class="evidence" data-id="${p.id}">
+    <div class="evidence-tag">${p.tag}</div>
+    <div class="evidence-photo">${p.svg}</div>
+    <div class="evidence-caption">${p.polaroidCaption}</div>
+  </div>
+`).join('');
+
+// Open modal
+gridEl.querySelectorAll('.evidence').forEach(el => {
+  el.addEventListener('click', () => {
+    const id = parseInt(el.dataset.id);
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    
+    document.getElementById('modal-num').textContent = `Photo ${String(id).padStart(2, '0')} / 09`;
+    document.getElementById('modal-evidence-num').textContent = post.tag;
+    document.getElementById('modal-photo').innerHTML = post.svg;
+    document.getElementById('modal-caption').textContent = post.caption;
+    document.getElementById('modal-hashtags').textContent = post.hashtags;
+    
+    const locEl = document.getElementById('modal-location');
+    if (post.location) {
+      locEl.textContent = post.location;
+      locEl.style.display = 'block';
+    } else {
+      locEl.style.display = 'none';
+    }
+    
+    document.getElementById('modal-meta').textContent = post.meta;
+    document.getElementById('modal').classList.add('active');
+  });
+});
+
+document.getElementById('modal-close').addEventListener('click', () => {
+  document.getElementById('modal').classList.remove('active');
+});
+
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') {
+    document.getElementById('modal').classList.remove('active');
+  }
+});
+
+// Normalize for comparison
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.,]/g, '');
+}
+
+function isCorrect(input, correctList) {
+  const n = normalize(input);
+  if (!n) return false;
+  return correctList.some(c => {
+    const cn = normalize(c);
+    return n === cn || n.includes(cn) || cn.includes(n);
+  });
+}
+
+// Submit
+document.getElementById('submit-btn').addEventListener('click', () => {
+  let score = 0;
+  const results = [];
+  
+  Object.keys(answers).forEach(key => {
+    const input = document.getElementById(key);
+    const val = input.value.trim();
+    const correct = isCorrect(val, answers[key].correct);
+    
+    input.classList.remove('correct', 'wrong');
+    if (val) input.classList.add(correct ? 'correct' : 'wrong');
+    
+    if (correct) score++;
+    
+    results.push({
+      label: input.closest('.quiz-item').querySelector('.quiz-question').textContent,
+      input: val || '(미작성)',
+      correct: correct,
+      answer: answers[key].answer,
+      source: answers[key].source
+    });
+  });
+  
+  document.getElementById('score').textContent = score;
+  
+  let message = '';
+  if (score >= 7) {
+    message = '"훌륭해. 가족에게 바로 연락할 수 있겠어."';
+  } else if (score >= 5) {
+    message = '"절반 이상은 알아냈군. 연락은 가능하겠어."';
+  } else if (score >= 3) {
+    message = '"아직 부족해. 가족에게 연락하려면 더 찾아야 해."';
+  } else {
+    message = '"이래선 가족에게 연락할 수 없어. 다시 봐."';
+  }
+  document.getElementById('result-message').textContent = message;
+  
+  document.getElementById('reveal-items').innerHTML = results.map(r => `
+    <div class="reveal-item">
+      <div class="reveal-item-header">
+        <span class="check ${r.correct ? 'yes' : 'no'}">${r.correct ? '✓' : '✗'}</span>
+        <span class="reveal-q">${r.label}</span>
+      </div>
+      <div class="reveal-answer">${r.answer}</div>
+      <div class="reveal-source">→ 단서: ${r.source}</div>
+    </div>
+  `).join('');
+  
+  document.getElementById('result').classList.add('show');
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  Object.keys(answers).forEach(key => {
+    const input = document.getElementById(key);
+    input.value = '';
+    input.classList.remove('correct', 'wrong');
+  });
+  document.getElementById('result').classList.remove('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
